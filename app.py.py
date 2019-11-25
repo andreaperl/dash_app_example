@@ -5,33 +5,26 @@
 
 
 import dash
+from dash.dependencies import Input, Output
 import dash_core_components as dcc
 import dash_html_components as html
 
 app = dash.Dash(__name__)
-server= app.server
+server =app.server
 
-app.layout = html.Div(children=[
-    html.H1(children='Hello Dash'),
-
-    html.Div(children='''
-        Dash: A web application framework for Python.
-    '''),
-
-    dcc.Graph(
-        id='example-graph',
-        figure={
-            'data': [
-                {'x': [1, 2, 3], 'y': [4, 1, 2], 'type': 'line', 'name': 'SF'},
-                {'x': [1, 2, 3], 'y': [2, 4, 5], 'type': 'line', 'name': u'Montréal'},
-            ],
-            'layout': {
-                'title': 'Dash Data Visualization'
-            }
-        }
-    )
+app.layout = html.Div([
+    dcc.Input(id='my-id', value='initial value', type="text"),
+    html.Div(id='my-div')
 ])
+#mn output is empty until here
+
+@app.callback(
+    Output(component_id='my-div', component_property='children'), #if we want output to be a graph, do it here
+    [Input(component_id='my-id', component_property='value')]
+)
+def update_output_div(input_value):
+    return 'You\'ve entered. WOW!!! "{}"'.format(input_value) #--and here: we would need to write fun to regenerate graph every time input is changed 
 
 if __name__ == '__main__':
-    app.run_server(debug=False)
+    app.run_server()
 
